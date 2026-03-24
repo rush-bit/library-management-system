@@ -32,10 +32,10 @@ public class Main {
                     library.displayAllBooks();
                     break;
                 case 3:
-                    System.out.println("→ Search book (coming soon)");
+                    searchMenu(scanner);
                     break;
                 case 4:
-                    System.out.println("→ Add member (coming soon)");
+                    addMemberMenu(scanner);
                     break;
                 case 5:
                     System.out.println("→ Issue book (coming soon)");
@@ -95,5 +95,66 @@ public class Main {
         
         Book newBook = new Book(bookID, title, author, totalCopies);
         library.addBook(newBook);
+    }
+
+    private static void searchMenu(Scanner scanner){
+        System.out.println("\n--- Search Book ---");
+        System.out.println("1. Search by BookID");
+        System.out.println("2. Search by author");
+        System.out.println("3. Search by title");
+        System.out.println("0. Back to the menu");
+
+        System.out.println("Enter Search option: ");
+        int option;
+        try {
+            option = Integer.parseInt(scanner.nextLine().trim());
+        } 
+        catch (NumberFormatException e) {
+            System.out.println("Invalid Option ");
+            return;
+        }
+
+        switch(option){
+            case 1:
+                System.out.println("Enter BookID");
+                String bookId = scanner.nextLine().trim();
+                library.searchByID(bookId);
+                break;
+            case 2:
+                System.out.println("Enter author name");
+                String author=scanner.nextLine().trim();
+                library.searchByAuthor(author);
+                break;
+            case 3:
+                System.out.println("Enter the title of the book");
+                String title=scanner.nextLine().trim();
+                library.searchByTitle(title);
+                break;
+            case 0:
+                break;
+            default:
+                System.out.println("Invalid search option");
+        }
+    }
+
+    private static void addMemberMenu(Scanner scanner) {
+        System.out.println("\n--- Add New Member ---");
+        
+        System.out.print("Enter Member ID (Any unique hexnum combination) : ");
+        String memberId = scanner.nextLine().trim();
+        
+        if (memberId.isEmpty()) {
+            System.out.println("Member ID cannot be empty!");
+            return;
+        }
+        
+        System.out.print("Enter Name : ");
+        String name = scanner.nextLine().trim();
+        
+        System.out.print("Enter Contact (phone/email) : ");
+        String contact = scanner.nextLine().trim();
+        
+        Member newMember = new Member(memberId, name, contact);
+        library.addMember(newMember);
     }
 }
