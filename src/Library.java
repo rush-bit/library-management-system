@@ -7,6 +7,7 @@ public class Library {
     private Map<String,Book> bookMap=new HashMap<>();
     private List<Member> members=new ArrayList<>();
     private Map<String,Member> memberMap = new HashMap<>();
+    private List<BorrowRecord> borrowRecords = new ArrayList<>();
 
 
     // this method adds a new book in list and ain map
@@ -139,5 +140,83 @@ public class Library {
         return memberMap.get(memberId.trim());
     }
 
+    public void issueBook(String bookId,String memberId){
+        Book book=findBookbyID(bookId);
+        Member member=findMemberById(memberId);
 
+        if(book==null){
+            System.out.println("Error: Book with BookID "+bookId+" not found");
+        }
+        if(member == null){
+            System.out.println("Error: Book with MemberID "+memberId+" not found");
+        }
+        if(!book.canBorrow()){
+            System.out.println("Error: Book is currently not available");
+            return;
+        }
+
+        BorrowRecord record = new BorrowRecord(bookId, memberId);
+        borrowRecords.add(record);
+        book.borrow();
+
+        System.out.println("Book issued successfully");
+        System.out.println("   Title     : " + book.getTitle());
+        System.out.println("   Member    : " + member.getName());
+        System.out.println("   Due Date  : " + record.getDuDate());
+    }
+
+    public void returnBook(String bookID,String memberID){
+        Book book=findBookbyID(bookID);
+
+        if(book == null){
+            System.out.println("Error: Book not found!");
+            return;
+        }
+
+        BorrowRecord record = null;
+        for(BorrowRecord br:borrowRecords){
+            if(br.getBookId().equals(bookID) && br.getMemberId().equals(memberID)){
+                record = br;
+                break;
+            }
+        }
+
+        if(record == null){
+            System.out.println("Error: No active borrow record for this book and member");
+            return;
+        }
+
+        record.returnBook();
+        book.returnBook();
+
+        System.out.println("Book returned successfully!");
+        System.out.println("   Title     : " + book.getTitle());
+        System.out.println("   Member    : " + findMemberById(memberID).getName());
+        System.out.println("   Returned on: " + record.getReturnDate());
+    }
+
+    public void displayBorrowedBooks(){
+        boolean hasBorrowed=false;
+        System.out.println("\n=== Currently Borrowed Books ===");
+        System.out.println("BookID           Member ID      Borrow Date   Due Date     Status");
+        System.out.println("--------------------------------------------------------------------------------");
+
+        for (BorrowRecord record : borrowRecords) {
+            if (!record.isReturned()) {
+                hasBorrowed = true;
+                Book book = findBookbyID(record.getBookId());
+                Member member = findMemberById(record.getMemberId());
+                
+                System.out.printf("%-15s %-15s %-12s %-12s Active\n",
+                        record.getBookId(),
+                        record.getMemberId(),
+                        record.getBorrowDate(),
+                        record.getDuDate());
+            }
+        }
+
+        if (!hasBorrowed) {
+            System.out.println("No books are currently borrowed.");
+        }
+    }
 }

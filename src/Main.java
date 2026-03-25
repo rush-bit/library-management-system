@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Main {
     
-    private static Library library = new Library();  // One library for the whole program
+    private static Library library = new Library(); 
     
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -17,7 +17,7 @@ public class Main {
             
             int choice;
             try {
-                System.out.print("\nEnter your choice (0-6): ");
+                System.out.print("\nEnter your choice (0-7): ");
                 choice = Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
                 System.out.println("Please enter a valid number.");
@@ -38,10 +38,13 @@ public class Main {
                     addMemberMenu(scanner);
                     break;
                 case 5:
-                    System.out.println("→ Issue book (coming soon)");
+                    issueBookMenu(scanner); 
                     break;
                 case 6:
-                    System.out.println("→ Return book (coming soon)");
+                    returnBookMenu(scanner);
+                    break;
+                case 7:
+                    library.displayBorrowedBooks(); 
                     break;
                 case 0:
                     System.out.println("\nThank you for using the Library System. Goodbye!");
@@ -63,6 +66,7 @@ public class Main {
         System.out.println("4. Add a new member");
         System.out.println("5. Issue a book");
         System.out.println("6. Return a book");
+        System.out.println("7. Display all borrowed Books");
         System.out.println("0. Exit");
     }
 
@@ -156,5 +160,27 @@ public class Main {
         
         Member newMember = new Member(memberId, name, contact);
         library.addMember(newMember);
+    }
+
+    private static void issueBookMenu(Scanner scanner) {
+        System.out.println("\n--- Issue Book ---");
+        System.out.print("Enter BookID      : ");
+        String bookid = scanner.nextLine().trim();
+        
+        System.out.print("Enter Member ID : ");
+        String memberId = scanner.nextLine().trim();
+        
+        library.issueBook(bookid, memberId);
+    }
+
+    private static void returnBookMenu(Scanner scanner) {
+        System.out.println("\n--- Return Book ---");
+        System.out.print("Enter BookID      : ");
+        String bookid = scanner.nextLine().trim();
+        
+        System.out.print("Enter Member ID : ");
+        String memberId = scanner.nextLine().trim();
+        
+        library.returnBook(bookid, memberId);
     }
 }
