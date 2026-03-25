@@ -219,4 +219,33 @@ public class Library {
             System.out.println("No books are currently borrowed.");
         }
     }
+
+    public void saveData() {
+        FileHandler.saveBooks(books);
+        FileHandler.saveMembers(members);
+        FileHandler.saveBorrowRecords(borrowRecords);
+    }
+
+    public void loadData() {
+        books.clear();
+        bookMap.clear();
+        members.clear();
+        memberMap.clear();
+        borrowRecords.clear();
+
+        List<Book> loadedBooks = FileHandler.loadBooks();
+        for (Book b : loadedBooks) {
+            books.add(b);
+            bookMap.put(b.getbookId(), b);
+        }
+
+        List<Member> loadedMembers = FileHandler.loadMembers();
+        for (Member m : loadedMembers) {
+            members.add(m);
+            memberMap.put(m.getMemberId(), m);
+        }
+        borrowRecords.addAll(FileHandler.loadBorrowRecords());
+
+        System.out.println("Data loaded from files.");
+    }
 }

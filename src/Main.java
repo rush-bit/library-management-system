@@ -5,6 +5,7 @@ public class Main {
     private static Library library = new Library(); 
     
     public static void main(String[] args) {
+        library.loadData();
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
 
@@ -47,6 +48,7 @@ public class Main {
                     library.displayBorrowedBooks(); 
                     break;
                 case 0:
+                    library.saveData();
                     System.out.println("\nThank you for using the Library System. Goodbye!");
                     running = false;
                     break;
